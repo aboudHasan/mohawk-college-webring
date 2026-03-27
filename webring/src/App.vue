@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import {
-  type JobFilters,
-  type Member,
-  type TechFilters,
-  type YearFilters,
-} from "./types";
-import membersArray from "../../members.json";
+import { type JobFilters, type TechFilters, type YearFilters } from "./types";
 import FilterButtons from "./components/FilterButtons.vue";
 import { ref, toRaw } from "vue";
 import DirectoryView from "./components/DirectoryView.vue";
 import SearchBar from "./components/SearchBar.vue";
 
-const members: Member[] = membersArray as Member[];
-const filterMembers = [];
 const activeJobFilters = ref<JobFilters[]>([]);
 const activeTechFilters = ref<TechFilters[]>([]);
 const activeYearFilters = ref<YearFilters[]>([]);
