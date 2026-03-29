@@ -45,7 +45,7 @@ function setYearFilters(value: YearFilters) {
   <main>
     <header>
       <h1><span>Mohawk College</span> Webring</h1>
-      <p class="header-sub">A curated directory of student portfolio sites.</p>
+      <p class="header-sub">A directory of student portfolio sites.</p>
     </header>
 
     <section class="controls-container">
