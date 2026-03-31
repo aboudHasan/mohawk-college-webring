@@ -42,6 +42,7 @@ export interface Member {
   tags: TechFilters[];
   jobStatus: JobFilters;
   graduationYear: YearFilters;
+  email?: string;
 }
 
 export interface Menu {

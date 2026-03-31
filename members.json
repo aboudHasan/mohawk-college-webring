@@ -4,7 +4,8 @@
     "url": "https://aboudhasan.tech",
     "graduationYear": 2027,
     "tags": ["TypeScript", "JavaScript", "Node.js", "React", "Vue", "Linux"],
-    "jobStatus": "Employed"
+    "jobStatus": "Employed",
+    "email": "aboudhasan06@gmail.com"
   },
   {
     "name": "John Doe",
