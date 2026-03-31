@@ -1,0 +1,44 @@
+name: send emails on PR merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  run-custom-script:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: get repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: check array
+        id: array-check
+        run: |
+          OLD_LENGTH=$(git show HEAD^1:members.json | jq '. | length')
+          NEW_LENGTH=$(jq '. | length' members.json)
+
+          if [ "$NEW_LENGTH" -gt "$OLD_LENGTH" ]; then
+            echo "should_run_script=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: setup node
+        if: steps.array-check.outputs.should_run_script == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: install nodemailer
+        if: steps.array-check.outputs.should_run_script == 'true'
+        run: npm ci
+
+      - name: send emails
+        if: steps.array-check.outputs.should_run_script == 'true'
+        run: node scripts/send-emails.js
+        env:
+          FIRST_SECRET_ENV_VAR: ${{ secrets.EMAIL}}
+          SECOND_SECRET_ENV_VAR: ${{ secrets.APP_PASSWORD }}
