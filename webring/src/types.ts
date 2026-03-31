@@ -44,6 +44,13 @@ export interface Member {
   graduationYear: YearFilters;
 }
 
+export interface Menu {
+  isVisible: boolean;
+  member: Member;
+  mouseX: number | null;
+  mouseY: number | null;
+}
+
 export type JobFilters = (typeof jobFiltersArray)[number];
 export type YearFilters = (typeof yearFiltersArray)[number];
 export type TechFilters = (typeof techFiltersArray)[number];
