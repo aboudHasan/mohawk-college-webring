@@ -10,6 +10,7 @@ const activeJobFilters = ref<JobFilters[]>([]);
 const activeTechFilters = ref<TechFilters[]>([]);
 const activeYearFilters = ref<YearFilters[]>([]);
 const activeSearchFilter = ref<string>("");
+const graphState = ref<boolean>(false);
 
 function setJobFilters(value: JobFilters) {
   const index = activeJobFilters.value.indexOf(value);
@@ -49,8 +50,6 @@ function setYearFilters(value: YearFilters) {
       <p class="header-sub">A directory of student portfolio sites</p>
     </header>
 
-    <Graph></Graph>
-
     <section class="controls-container">
       <SearchBar @set-search-input="activeSearchFilter = $event"></SearchBar>
       <FilterButtons
@@ -61,6 +60,20 @@ function setYearFilters(value: YearFilters) {
         :currentYearFilters="activeYearFilters"
         @set-year-filter="setYearFilters"
       ></FilterButtons>
+    </section>
+
+    <section class="graph-container">
+      <button @click="graphState = !graphState">
+        {{ graphState ? "Hide graph" : "Show graph" }}
+      </button>
+
+      <Graph
+        :currentJobFilters="activeJobFilters"
+        :currentTechFilters="activeTechFilters"
+        :currentYearFilters="activeYearFilters"
+        :current-search-filter="activeSearchFilter"
+        v-if="graphState"
+      ></Graph>
     </section>
 
     <section class="directory-container">
@@ -148,6 +161,7 @@ header h1 span {
 .directory-container {
   border-top: 1px solid #333333;
   padding-top: 2rem;
+  margin-top: 2rem;
 }
 
 a {
@@ -165,5 +179,32 @@ a:focus {
 a:focus-visible {
   outline: 2px solid #ff9933;
   outline-offset: 2px;
+}
+
+.graph-container {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.graph-container button {
+  align-self: flex-start;
+  background-color: transparent;
+  border: 1px solid #333333;
+  color: #cccccc;
+  font-size: 0.85rem;
+  font-family: inherit;
+  padding: 0.4rem 0.85rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.graph-container button:hover,
+.graph-container button:focus-visible {
+  border-color: #ff9933;
+  color: #e8e8e8;
+  outline: none;
 }
 </style>

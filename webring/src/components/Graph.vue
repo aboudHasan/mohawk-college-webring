@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { markRaw, reactive, ref } from "vue";
+import { computed, markRaw, reactive, ref, watch } from "vue";
 import * as vNG from "v-network-graph";
 import {
   ForceLayout,
@@ -8,12 +8,18 @@ import {
 } from "v-network-graph/lib/force-layout";
 import "v-network-graph/lib/style.css";
 import membersArray from "../../../members.json";
-import type { Member, Menu } from "../types";
+import type {
+  JobFilters,
+  Member,
+  Menu,
+  TechFilters,
+  YearFilters,
+} from "../types";
 import type { EventHandlers, Layouts } from "v-network-graph";
 
 const members: Member[] = membersArray as Member[];
 const nodes = reactive<Record<string, Member>>({});
-const edges = reactive({});
+const edges = reactive<vNG.Edges>({});
 const layout = reactive<Layouts>({ nodes: {} });
 const menuState = reactive<Menu>({
   isVisible: false,
@@ -29,7 +35,82 @@ const menuState = reactive<Menu>({
 });
 const selectedNodeID = ref<string>("");
 
-buildNetwork(nodes, edges);
+const props = defineProps<{
+  currentJobFilters: JobFilters[];
+  currentTechFilters: TechFilters[];
+  currentYearFilters: YearFilters[];
+  currentSearchFilter: string;
+}>();
+
+const filteredMembers = computed<Member[]>(() => {
+  return members.filter((member) => {
+    const matchName =
+      props.currentSearchFilter.length === 0 ||
+      member.name
+        .toLowerCase()
+        .startsWith(props.currentSearchFilter.toLowerCase());
+
+    const matchJob =
+      props.currentJobFilters.length === 0 ||
+      props.currentJobFilters.includes(member.jobStatus);
+
+    const matchTech =
+      props.currentTechFilters.length === 0 ||
+      member.tags.some((tag) =>
+        props.currentTechFilters.includes(tag as TechFilters),
+      );
+
+    const matchYear =
+      props.currentYearFilters.length === 0 ||
+      props.currentYearFilters.includes(member.graduationYear as YearFilters);
+
+    return matchName && matchJob && matchTech && matchYear;
+  });
+});
+
+watch(
+  filteredMembers,
+  () => {
+    const count = filteredMembers.value.length;
+
+    const newNodes = Object.fromEntries(
+      filteredMembers.value.map((member, index) => [
+        `node${index}`,
+        { ...member },
+      ]),
+    );
+
+    Object.keys(nodes).forEach((id) => delete nodes[id]);
+    Object.assign(nodes, newNodes);
+
+    const makeEdgeEntry = (id1: number, id2: number) => {
+      return [
+        `edge${id1}-${id2}`,
+        { source: `node${id1}`, target: `node${id2}` },
+      ];
+    };
+
+    const newEdges = Object.fromEntries(
+      filteredMembers.value.map((_, index) => {
+        const targetIndex = (index + 1) % count;
+        return makeEdgeEntry(index, targetIndex);
+      }),
+    );
+
+    layout.nodes = {};
+    for (let i = 0; i < filteredMembers.value.length; i++) {
+      const randomX = Math.floor(Math.random() * 600) - 300;
+      const randomY = Math.floor(Math.random() * 400) - 200;
+      layout.nodes[`node${i}`] = { x: randomX, y: randomY };
+    }
+
+    Object.keys(edges).forEach((id) => delete edges[id]);
+    Object.assign(edges, newEdges);
+  },
+  { immediate: true },
+);
+
+// buildNetwork(nodes, edges);
 
 const layoutHandler = markRaw(
   new ForceLayout({
@@ -57,57 +138,85 @@ const configs = reactive(
       layoutHandler,
     },
     node: {
+      normal: {
+        radius: 12,
+        color: "#111111",
+        strokeWidth: 2,
+        strokeColor: "#ff9933",
+      },
+      hover: {
+        radius: 12,
+        color: "#333333",
+        strokeWidth: 2,
+        strokeColor: "#ff9933",
+      },
       label: {
         visible: true,
+        fontFamily: '"Inter", system-ui, sans-serif',
+        fontSize: 12,
+        lineHeight: 1.2,
+        color: "#cccccc",
+        margin: 6,
+        direction: "south",
+      },
+      focusring: {
+        color: "#ff9933",
+        width: 4,
+      },
+    },
+    edge: {
+      normal: {
+        color: "#333333",
+        width: 2,
+      },
+      hover: {
+        color: "#ff9933",
+        width: 2,
       },
     },
   }),
 );
 
-const hideMenu = () => {
-  menuState.isVisible = false;
-};
+// function buildNetwork(nodes: Record<string, Member>, edges: vNG.Edges) {
+//   const count = members.length;
 
-function buildNetwork(nodes: Record<string, Member>, edges: vNG.Edges) {
-  const count = members.length;
+//   const newNodes = Object.fromEntries(
+//     filteredMembers.value.map((member, index) => [
+//       `node${index}`,
+//       { ...member },
+//     ]),
+//   );
 
-  const newNodes = Object.fromEntries(
-    members.map((member, index) => [`node${index}`, { ...member }]),
-  );
+//   Object.keys(nodes).forEach((id) => delete nodes[id]);
+//   Object.assign(nodes, newNodes);
 
-  Object.keys(nodes).forEach((id) => delete nodes[id]);
-  Object.assign(nodes, newNodes);
+//   const makeEdgeEntry = (id1: number, id2: number) => {
+//     return [
+//       `edge${id1}-${id2}`,
+//       { source: `node${id1}`, target: `node${id2}` },
+//     ];
+//   };
 
-  const makeEdgeEntry = (id1: number, id2: number) => {
-    return [
-      `edge${id1}-${id2}`,
-      { source: `node${id1}`, target: `node${id2}` },
-    ];
-  };
+//   const newEdges = Object.fromEntries(
+//     filteredMembers.value.map((_, index) => {
+//       const targetIndex = (index + 1) % count;
+//       return makeEdgeEntry(index, targetIndex);
+//     }),
+//   );
 
-  const newEdges = Object.fromEntries(
-    members.map((_, index) => {
-      const targetIndex = (index + 1) % count;
-      return makeEdgeEntry(index, targetIndex);
-    }),
-  );
+//   layout.nodes = {};
+//   for (let i = 0; i < members.length; i++) {
+//     const randomX = Math.floor(Math.random() * 600) - 300;
+//     const randomY = Math.floor(Math.random() * 400) - 200;
+//     layout.nodes[`node${i}`] = { x: randomX, y: randomY };
+//   }
 
-  layout.nodes = {};
-  for (let i = 0; i < members.length; i++) {
-    const randomX = Math.floor(Math.random() * 600) - 300;
-    const randomY = Math.floor(Math.random() * 400) - 200;
-    layout.nodes[`node${i}`] = { x: randomX, y: randomY };
-  }
+//   Object.keys(edges).forEach((id) => delete edges[id]);
+//   Object.assign(edges, newEdges);
+// }
 
-  Object.keys(edges).forEach((id) => delete edges[id]);
-  Object.assign(edges, newEdges);
-}
-
-let suppressViewClick = false;
 const eventHandlers: EventHandlers = {
   "node:click": ({ node, event }) => {
-    suppressViewClick = true;
-
     if (node !== selectedNodeID.value) {
       menuState.isVisible = true;
       menuState.mouseX = event.clientX;
@@ -120,10 +229,6 @@ const eventHandlers: EventHandlers = {
     }
   },
   "view:click": () => {
-    if (suppressViewClick) {
-      suppressViewClick = false;
-      return;
-    }
     menuState.isVisible = false;
     selectedNodeID.value = "";
   },
@@ -145,31 +250,64 @@ const eventHandlers: EventHandlers = {
     class="nodeMenu"
     :style="{ left: menuState.mouseX + 'px', top: menuState.mouseY + 'px' }"
   >
-    {{ menuState.member.name }}
+    <div class="menu-name">{{ menuState.member.name }}</div>
+    <div class="menu-year">Class of {{ menuState.member.graduationYear }}</div>
+    <a
+      :href="menuState.member.url"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="menu-link"
+    >
+      View Site
+    </a>
   </div>
 </template>
 
 <style scoped>
 .graph {
-  width: 800px;
+  width: 100%;
+  max-width: 800px;
   height: 600px;
-  border: 1px solid #cccccc;
-  background-color: #333333;
+  border: 2px solid #333333;
+  background-color: transparent;
+  border-radius: 4px;
 }
+
 .nodeMenu {
-  position: absolute;
+  position: fixed;
   z-index: 100;
   transform: translate(15px, 15px);
 
-  background-color: #1e1e1e;
-  color: #f1f1f1;
+  background-color: #111111;
+  color: #e8e8e8;
   padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #555555;
+  border-radius: 4px;
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  font-family: sans-serif;
+  border: 1px solid #333333;
+  border-left: 3px solid #ff9933;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  font-family: "Inter", system-ui, sans-serif;
   font-size: 14px;
   font-weight: 500;
+}
+
+.menu-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.menu-year {
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 8px;
+}
+
+.menu-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
 }
 </style>

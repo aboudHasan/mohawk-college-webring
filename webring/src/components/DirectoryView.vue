@@ -128,10 +128,12 @@ const filteredMembers = computed(() => {
   align-content: flex-start;
   min-height: 0;
   padding-right: 0.25rem;
+  scrollbar-color: #ff9933;
 }
 
 .tags-container::-webkit-scrollbar {
   width: 6px;
+  color: #ff9933;
 }
 
 .tags-container::-webkit-scrollbar-track {
@@ -145,6 +147,11 @@ const filteredMembers = computed(() => {
 
 .tags-container::-webkit-scrollbar-thumb:hover {
   background-color: #555555;
+}
+
+.tags-container::-webkit-scrollbar-thumb:active {
+  background-color: #ff9933;
+  color: #ff9933;
 }
 
 .tag {
