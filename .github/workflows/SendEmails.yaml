@@ -41,4 +41,4 @@ jobs:
         run: node scripts/send-emails.js
         env:
           EMAIL: ${{ secrets.EMAIL}}
-          PASSWORD: ${{ secrets.APP_PASSWORD }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
