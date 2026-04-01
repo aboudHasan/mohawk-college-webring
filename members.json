@@ -66,5 +66,11 @@
     "jobStatus": "Not looking for work",
     "graduationYear": 2023,
     "tags": ["C"]
-  }
+  },
+  {
+    "name": "Idiot Sandwich",
+    "url": "https://example.com",
+    "jobStatus": "Seeking co-op",
+    "graduationYear": 2030",
+    "tags": ["T-SQL"]
 ]
