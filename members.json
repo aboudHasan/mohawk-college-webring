@@ -73,5 +73,12 @@
     "jobStatus": "Seeking co-op",
     "graduationYear": 2024,
     "tags": ["Ruby"]
+  },
+  {
+    "name": "Idiot Sandwich2",
+    "url": "https://example.com",
+    "jobStatus": "Seeking co-op",
+    "graduationYear": 2024,
+    "tags": ["C++"]
   }
 ]
