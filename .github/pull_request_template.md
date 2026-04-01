@@ -1,8 +1,9 @@
-> [!IMPORTANT]  
-> **READ BEFORE SUBMITTING** > Please review the following requirements to ensure your submission is smoothly added.  
-> **Once you have verified these steps, please delete this entire block of text and replace it with your actual pull request description.**
+> [!IMPORTANT]
 
-### Welcome to the Mohawk College webring (name needs some work)!
+### Welcome to the Mohawk College webring!
+
+> **READ BEFORE SUBMITTING** > Please review the following requirements to ensure your submission is smoothly added.  
+> **Once you have verified these steps, you can delete this entire block of text and replace it with your actual pull request description.**
 
 - **Placement:** I have added my member object to the **absolute end** of the array in `members.json`.
 - **Required Fields:** My member object includes valid `name`, `url`, `jobStatus`, `graduationYear`, and `tags` properties.
