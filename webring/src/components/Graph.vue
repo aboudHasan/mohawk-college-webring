@@ -79,7 +79,6 @@ watch(
       newLayouts[`node${i}`] = { x: randomX, y: randomY };
     }
 
-    // Safely mutate layout to preserve reactivity proxy
     Object.keys(layout.nodes).forEach((id) => delete layout.nodes[id]);
     Object.assign(layout.nodes, newLayouts);
 
@@ -136,7 +135,7 @@ const configs = reactive(
       },
       hover: {
         radius: 12,
-        color: "#111111", // Standardized to match normal state
+        color: "#111111",
         strokeWidth: 1.5,
         strokeColor: "#ff9933",
       },

@@ -20,7 +20,6 @@ const highlightedMemberIndex = ref<number | null>(null);
 
 const members: Member[] = membersArray as Member[];
 
-// Centralized single source of truth for filtered data
 const filteredMembers = computed<Member[]>(() => {
   return members.filter((member) => {
     const matchName =
