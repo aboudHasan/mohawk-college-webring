@@ -34,7 +34,10 @@ export const techFiltersArray = [
   "Java",
   "Laravel",
   "Bash",
-  "Python"
+  "Python",
+  "Unity",
+  "Godot",
+  "Unreal Engine"
 ] as const;
 
 export interface Member {
