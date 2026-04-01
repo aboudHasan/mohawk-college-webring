@@ -1,13 +1,14 @@
-name: send emails on PR merge
+name: send emails on member update
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
+  push:
+    branches:
+      - main
+    paths:
+      - "members.json"
 
 jobs:
   run-custom-script:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -40,5 +41,5 @@ jobs:
         if: steps.array-check.outputs.should_run_script == 'true'
         run: node scripts/send-emails.js
         env:
-          EMAIL: ${{ secrets.EMAIL}}
+          EMAIL: ${{ secrets.EMAIL }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
