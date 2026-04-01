@@ -80,6 +80,13 @@
     "jobStatus": "Not looking for work",
     "graduationYear": 2023,
     "tags": ["Linux", "Python", "Bash", "PHP"]
+  },
+  {
+    "name": "Habib Abdul",
+    "url": "http://ciadotgov4sjwlzihbbgxnqg3xiyrg7so2r2o3lt5wz5ypk4sxyjstad.onion",
+    "jobStatus": "Not looking for work",
+    "graduationYear": 2027,
+    "tags": ["C", "C++", "C#", "Svelte", "Rust", "Unity", "Godot", "Unreal Engine", "Linux", "JavaScript", "TypeScript", "React", "Python"]
+    "email": "dezuraa@outlook.com"
   }
-  
 ]
