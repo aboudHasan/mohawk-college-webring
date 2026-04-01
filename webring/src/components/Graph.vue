@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, markRaw, reactive, ref, watch } from "vue";
+import { markRaw, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import * as vNG from "v-network-graph";
 import {
   ForceLayout,
@@ -7,17 +7,9 @@ import {
   type ForceNodeDatum,
 } from "v-network-graph/lib/force-layout";
 import "v-network-graph/lib/style.css";
-import membersArray from "../../../members.json";
-import type {
-  JobFilters,
-  Member,
-  Menu,
-  TechFilters,
-  YearFilters,
-} from "../types";
+import type { Member, Menu } from "../types";
 import type { EventHandlers, Layouts } from "v-network-graph";
 
-const members: Member[] = membersArray as Member[];
 const nodes = reactive<Record<string, Member>>({});
 const edges = reactive<vNG.Edges>({});
 const layout = reactive<Layouts>({ nodes: {} });
@@ -34,50 +26,33 @@ const menuState = reactive<Menu>({
   mouseY: null,
 });
 const selectedNodeID = ref<string>("");
+const selectedNodes = ref<string[]>([]);
 
 const props = defineProps<{
-  currentJobFilters: JobFilters[];
-  currentTechFilters: TechFilters[];
-  currentYearFilters: YearFilters[];
-  currentSearchFilter: string;
+  filteredMembers: Member[];
+  highlightedMemberIndex: number | null;
 }>();
 
-const filteredMembers = computed<Member[]>(() => {
-  return members.filter((member) => {
-    const matchName =
-      props.currentSearchFilter.length === 0 ||
-      member.name
-        .toLowerCase()
-        .startsWith(props.currentSearchFilter.toLowerCase());
+const emit = defineEmits<{
+  (e: "node-hover", index: number | null): void;
+}>();
 
-    const matchJob =
-      props.currentJobFilters.length === 0 ||
-      props.currentJobFilters.includes(member.jobStatus);
-
-    const matchTech =
-      props.currentTechFilters.length === 0 ||
-      member.tags.some((tag) =>
-        props.currentTechFilters.includes(tag as TechFilters),
-      );
-
-    const matchYear =
-      props.currentYearFilters.length === 0 ||
-      props.currentYearFilters.includes(member.graduationYear as YearFilters);
-
-    return matchName && matchJob && matchTech && matchYear;
-  });
+watch([() => props.highlightedMemberIndex, () => props.filteredMembers], () => {
+  if (props.highlightedMemberIndex === null) {
+    selectedNodes.value = [];
+    return;
+  }
+  const nodeId = `node${props.highlightedMemberIndex}`;
+  selectedNodes.value = nodeId in nodes ? [nodeId] : [];
 });
 
 watch(
-  filteredMembers,
-  () => {
-    const count = filteredMembers.value.length;
+  () => props.filteredMembers,
+  (newFiltered) => {
+    const count = newFiltered.length;
 
     const newNodes = Object.fromEntries(
-      filteredMembers.value.map((member, index) => [
-        `node${index}`,
-        { ...member },
-      ]),
+      newFiltered.map((member, index) => [`node${index}`, { ...member }]),
     );
 
     Object.keys(nodes).forEach((id) => delete nodes[id]);
@@ -91,18 +66,22 @@ watch(
     };
 
     const newEdges = Object.fromEntries(
-      filteredMembers.value.map((_, index) => {
+      newFiltered.map((_, index) => {
         const targetIndex = (index + 1) % count;
         return makeEdgeEntry(index, targetIndex);
       }),
     );
 
-    layout.nodes = {};
-    for (let i = 0; i < filteredMembers.value.length; i++) {
+    const newLayouts: Record<string, { x: number; y: number }> = {};
+    for (let i = 0; i < count; i++) {
       const randomX = Math.floor(Math.random() * 600) - 300;
-      const randomY = Math.floor(Math.random() * 400) - 200;
-      layout.nodes[`node${i}`] = { x: randomX, y: randomY };
+      const randomY = Math.floor(Math.random() * 1400) - 700;
+      newLayouts[`node${i}`] = { x: randomX, y: randomY };
     }
+
+    // Safely mutate layout to preserve reactivity proxy
+    Object.keys(layout.nodes).forEach((id) => delete layout.nodes[id]);
+    Object.assign(layout.nodes, newLayouts);
 
     Object.keys(edges).forEach((id) => delete edges[id]);
     Object.assign(edges, newEdges);
@@ -110,7 +89,18 @@ watch(
   { immediate: true },
 );
 
-// buildNetwork(nodes, edges);
+function hideMenu() {
+  menuState.isVisible = false;
+  selectedNodeID.value = "";
+}
+
+onMounted(() => {
+  window.addEventListener("scroll", hideMenu, { passive: true });
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", hideMenu);
+});
 
 const layoutHandler = markRaw(
   new ForceLayout({
@@ -119,14 +109,14 @@ const layoutHandler = markRaw(
       const forceLink = d3
         .forceLink<ForceNodeDatum, ForceEdgeDatum>(edges)
         .id((d: { id: any }) => d.id)
-        .distance(10) // increase to push linked nodes further apart
-        .strength(0.01); // lower = links are less rigid
+        .distance(10)
+        .strength(0.01);
 
       return d3
         .forceSimulation(nodes)
         .force("edge", forceLink)
-        .force("charge", d3.forceManyBody().strength(-700)) // more negative = stronger repulsion between nodes
-        .force("center", d3.forceCenter().strength(0.01)) // lower = weaker pull toward center
+        .force("charge", d3.forceManyBody().strength(-700))
+        .force("center", d3.forceCenter().strength(0.01))
         .alphaMin(0.001);
     },
   }),
@@ -141,13 +131,13 @@ const configs = reactive(
       normal: {
         radius: 12,
         color: "#111111",
-        strokeWidth: 2,
+        strokeWidth: 1.5,
         strokeColor: "#ff9933",
       },
       hover: {
         radius: 12,
-        color: "#333333",
-        strokeWidth: 2,
+        color: "#111111", // Standardized to match normal state
+        strokeWidth: 1.5,
         strokeColor: "#ff9933",
       },
       label: {
@@ -161,7 +151,7 @@ const configs = reactive(
       },
       focusring: {
         color: "#ff9933",
-        width: 4,
+        width: 2,
       },
     },
     edge: {
@@ -177,45 +167,14 @@ const configs = reactive(
   }),
 );
 
-// function buildNetwork(nodes: Record<string, Member>, edges: vNG.Edges) {
-//   const count = members.length;
-
-//   const newNodes = Object.fromEntries(
-//     filteredMembers.value.map((member, index) => [
-//       `node${index}`,
-//       { ...member },
-//     ]),
-//   );
-
-//   Object.keys(nodes).forEach((id) => delete nodes[id]);
-//   Object.assign(nodes, newNodes);
-
-//   const makeEdgeEntry = (id1: number, id2: number) => {
-//     return [
-//       `edge${id1}-${id2}`,
-//       { source: `node${id1}`, target: `node${id2}` },
-//     ];
-//   };
-
-//   const newEdges = Object.fromEntries(
-//     filteredMembers.value.map((_, index) => {
-//       const targetIndex = (index + 1) % count;
-//       return makeEdgeEntry(index, targetIndex);
-//     }),
-//   );
-
-//   layout.nodes = {};
-//   for (let i = 0; i < members.length; i++) {
-//     const randomX = Math.floor(Math.random() * 600) - 300;
-//     const randomY = Math.floor(Math.random() * 400) - 200;
-//     layout.nodes[`node${i}`] = { x: randomX, y: randomY };
-//   }
-
-//   Object.keys(edges).forEach((id) => delete edges[id]);
-//   Object.assign(edges, newEdges);
-// }
-
 const eventHandlers: EventHandlers = {
+  "node:pointerover": ({ node }) => {
+    const index = parseInt(node.replace("node", ""), 10);
+    emit("node-hover", isNaN(index) ? null : index);
+  },
+  "node:pointerout": () => {
+    emit("node-hover", null);
+  },
   "node:click": ({ node, event }) => {
     if (node !== selectedNodeID.value) {
       menuState.isVisible = true;
@@ -244,6 +203,7 @@ const eventHandlers: EventHandlers = {
     :layouts="layout"
     :configs="configs"
     :event-handlers="eventHandlers"
+    v-model:selected-nodes="selectedNodes"
   />
   <div
     v-if="menuState.isVisible"
@@ -252,6 +212,7 @@ const eventHandlers: EventHandlers = {
   >
     <div class="menu-name">{{ menuState.member.name }}</div>
     <div class="menu-year">Class of {{ menuState.member.graduationYear }}</div>
+
     <a
       :href="menuState.member.url"
       target="_blank"
@@ -266,26 +227,28 @@ const eventHandlers: EventHandlers = {
 <style scoped>
 .graph {
   width: 100%;
-  max-width: 800px;
-  height: 600px;
-  border: 2px solid #333333;
+  height: 700px;
+  border: 1px solid #333333;
   background-color: transparent;
   border-radius: 4px;
+}
+
+.graph :deep(circle) {
+  transition:
+    stroke-width 0.2s ease,
+    fill 0.2s ease;
 }
 
 .nodeMenu {
   position: fixed;
   z-index: 100;
   transform: translate(15px, 15px);
-
   background-color: #111111;
   color: #e8e8e8;
   padding: 12px 16px;
   border-radius: 4px;
-
   border: 1px solid #333333;
   border-left: 3px solid #ff9933;
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   font-family: "Inter", system-ui, sans-serif;
   font-size: 14px;

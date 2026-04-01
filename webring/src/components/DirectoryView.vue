@@ -1,55 +1,25 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import {
-  type JobFilters,
-  type Member,
-  type TechFilters,
-  type YearFilters,
-} from "../types";
-import membersArray from "../../../members.json";
+import type { Member } from "../types";
 
 const props = defineProps<{
-  currentJobFilters: JobFilters[];
-  currentTechFilters: TechFilters[];
-  currentYearFilters: YearFilters[];
-  currentSearchFilter: string;
+  filteredMembers: Member[];
+  highlightedMemberIndex: number | null;
 }>();
 
-const members: Member[] = membersArray as Member[];
-
-const filteredMembers = computed(() => {
-  return members.filter((member) => {
-    const matchName =
-      props.currentSearchFilter.length === 0 ||
-      member.name
-        .toLowerCase()
-        .startsWith(props.currentSearchFilter.toLowerCase());
-
-    const matchJob =
-      props.currentJobFilters.length === 0 ||
-      props.currentJobFilters.includes(member.jobStatus);
-
-    const matchTech =
-      props.currentTechFilters.length === 0 ||
-      member.tags.some((tag) =>
-        props.currentTechFilters.includes(tag as TechFilters),
-      );
-
-    const matchYear =
-      props.currentYearFilters.length === 0 ||
-      props.currentYearFilters.includes(member.graduationYear as YearFilters);
-
-    return matchName && matchJob && matchTech && matchYear;
-  });
-});
+const emit = defineEmits<{
+  (e: "card-hover", index: number | null): void;
+}>();
 </script>
 
 <template>
   <div class="members-grid">
     <article
-      v-for="member in filteredMembers"
+      v-for="(member, i) in props.filteredMembers"
       :key="member.name"
       class="member-card"
+      :class="{ highlighted: i === props.highlightedMemberIndex }"
+      @mouseenter="emit('card-hover', i)"
+      @mouseleave="emit('card-hover', null)"
     >
       <h2 class="member-name">
         <a :href="member.url" target="_blank" rel="noopener noreferrer">
@@ -89,7 +59,8 @@ const filteredMembers = computed(() => {
 }
 
 .member-card:hover,
-.member-card:focus-within {
+.member-card:focus-within,
+.member-card.highlighted {
   border-color: #ff9933;
 }
 
@@ -128,30 +99,7 @@ const filteredMembers = computed(() => {
   align-content: flex-start;
   min-height: 0;
   padding-right: 0.25rem;
-  scrollbar-color: #ff9933;
-}
-
-.tags-container::-webkit-scrollbar {
-  width: 6px;
-  color: #ff9933;
-}
-
-.tags-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.tags-container::-webkit-scrollbar-thumb {
-  background-color: #333333;
-  border-radius: 4px;
-}
-
-.tags-container::-webkit-scrollbar-thumb:hover {
-  background-color: #555555;
-}
-
-.tags-container::-webkit-scrollbar-thumb:active {
-  background-color: #ff9933;
-  color: #ff9933;
+  scrollbar-color: #ff9933 transparent;
 }
 
 .tag {

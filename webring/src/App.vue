@@ -1,16 +1,51 @@
 <script setup lang="ts">
-import { type JobFilters, type TechFilters, type YearFilters } from "./types";
+import {
+  type JobFilters,
+  type TechFilters,
+  type YearFilters,
+  type Member,
+} from "./types";
 import FilterButtons from "./components/FilterButtons.vue";
-import { ref, toRaw } from "vue";
+import { computed, ref } from "vue";
 import DirectoryView from "./components/DirectoryView.vue";
 import SearchBar from "./components/SearchBar.vue";
 import Graph from "./components/Graph.vue";
+import membersArray from "../../members.json";
 
 const activeJobFilters = ref<JobFilters[]>([]);
 const activeTechFilters = ref<TechFilters[]>([]);
 const activeYearFilters = ref<YearFilters[]>([]);
 const activeSearchFilter = ref<string>("");
-const graphState = ref<boolean>(false);
+const highlightedMemberIndex = ref<number | null>(null);
+
+const members: Member[] = membersArray as Member[];
+
+// Centralized single source of truth for filtered data
+const filteredMembers = computed<Member[]>(() => {
+  return members.filter((member) => {
+    const matchName =
+      activeSearchFilter.value.length === 0 ||
+      member.name
+        .toLowerCase()
+        .startsWith(activeSearchFilter.value.toLowerCase());
+
+    const matchJob =
+      activeJobFilters.value.length === 0 ||
+      activeJobFilters.value.includes(member.jobStatus);
+
+    const matchTech =
+      activeTechFilters.value.length === 0 ||
+      member.tags.some((tag) =>
+        activeTechFilters.value.includes(tag as TechFilters),
+      );
+
+    const matchYear =
+      activeYearFilters.value.length === 0 ||
+      activeYearFilters.value.includes(member.graduationYear as YearFilters);
+
+    return matchName && matchJob && matchTech && matchYear;
+  });
+});
 
 function setJobFilters(value: JobFilters) {
   const index = activeJobFilters.value.indexOf(value);
@@ -19,7 +54,6 @@ function setJobFilters(value: JobFilters) {
   } else {
     activeJobFilters.value.splice(index, 1);
   }
-  console.log(toRaw(activeJobFilters.value));
 }
 
 function setTechFilters(value: TechFilters) {
@@ -29,7 +63,6 @@ function setTechFilters(value: TechFilters) {
   } else {
     activeTechFilters.value.splice(index, 1);
   }
-  console.log(toRaw(activeTechFilters.value));
 }
 
 function setYearFilters(value: YearFilters) {
@@ -39,7 +72,6 @@ function setYearFilters(value: YearFilters) {
   } else {
     activeYearFilters.value.splice(index, 1);
   }
-  console.log(toRaw(activeYearFilters.value));
 }
 </script>
 
@@ -62,28 +94,23 @@ function setYearFilters(value: YearFilters) {
       ></FilterButtons>
     </section>
 
-    <section class="graph-container">
-      <button @click="graphState = !graphState">
-        {{ graphState ? "Hide graph" : "Show graph" }}
-      </button>
+    <div class="content-layout">
+      <aside class="graph-sidebar">
+        <Graph
+          :filtered-members="filteredMembers"
+          :highlighted-member-index="highlightedMemberIndex"
+          @node-hover="highlightedMemberIndex = $event"
+        ></Graph>
+      </aside>
 
-      <Graph
-        :currentJobFilters="activeJobFilters"
-        :currentTechFilters="activeTechFilters"
-        :currentYearFilters="activeYearFilters"
-        :current-search-filter="activeSearchFilter"
-        v-if="graphState"
-      ></Graph>
-    </section>
-
-    <section class="directory-container">
-      <DirectoryView
-        :currentJobFilters="activeJobFilters"
-        :currentTechFilters="activeTechFilters"
-        :currentYearFilters="activeYearFilters"
-        :current-search-filter="activeSearchFilter"
-      ></DirectoryView>
-    </section>
+      <section class="directory-panel">
+        <DirectoryView
+          :filtered-members="filteredMembers"
+          :highlighted-member-index="highlightedMemberIndex"
+          @card-hover="highlightedMemberIndex = $event"
+        ></DirectoryView>
+      </section>
+    </div>
   </main>
 </template>
 
@@ -109,28 +136,15 @@ body {
 }
 
 main {
-  max-width: 80rem;
+  max-width: 92rem;
   margin: 0 auto;
   padding: 3rem 2rem 5rem;
 }
 
 header {
   border-bottom: 2px solid #333333;
-  padding-bottom: 1.75rem;
-  margin-bottom: 2.5rem;
-}
-
-.header-ring {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #ff9933;
-  border: 1px solid #ff9933;
-  padding: 0.25rem 0.75rem;
-  border-radius: 2px;
-  margin-bottom: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 header h1 {
@@ -152,16 +166,27 @@ header h1 span {
 }
 
 .controls-container {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-.directory-container {
-  border-top: 1px solid #333333;
-  padding-top: 2rem;
-  margin-top: 2rem;
+.content-layout {
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.graph-sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+.directory-panel {
+  min-width: 0;
 }
 
 a {
@@ -179,32 +204,5 @@ a:focus {
 a:focus-visible {
   outline: 2px solid #ff9933;
   outline-offset: 2px;
-}
-
-.graph-container {
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.graph-container button {
-  align-self: flex-start;
-  background-color: transparent;
-  border: 1px solid #333333;
-  color: #cccccc;
-  font-size: 0.85rem;
-  font-family: inherit;
-  padding: 0.4rem 0.85rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.graph-container button:hover,
-.graph-container button:focus-visible {
-  border-color: #ff9933;
-  color: #e8e8e8;
-  outline: none;
 }
 </style>
