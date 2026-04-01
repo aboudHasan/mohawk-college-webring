@@ -24,4 +24,4 @@ jobs:
         run: npm ci
 
       - name: validation script
-        run: npx tsx scripts/validate.ts
+        run: npx tsx util/validate.ts
