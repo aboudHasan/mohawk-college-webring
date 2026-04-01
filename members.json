@@ -73,5 +73,13 @@
     "jobStatus": "Not looking for work",
     "graduationYear": 2023,
     "tags": ["Linux", "Python", "Bash"]
+  },
+  {
+    "name": "Elliot Alderson",
+    "url": "https://gcc.gnu.org/",
+    "jobStatus": "Not looking for work",
+    "graduationYear": 2023,
+    "tags": ["Linux", "Python", "Bash", "PHP"]
   }
+  
 ]
