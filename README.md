@@ -21,7 +21,7 @@ Your member object must include the following valid properties. Be sure that the
 - `url`: The direct link to your personal website or portfolio.
 - `jobStatus`: Your current employment or search status.
 - `graduationYear`: The year you graduated or expect to graduate.
-- `tags`: An array of strings representing the technologies you work with.
+- `tags`: An array of strings representing the technologies you work with/are most familiar with.
 
 ### 3. Match the Strict Type Definitions
 
