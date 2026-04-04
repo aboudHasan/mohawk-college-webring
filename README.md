@@ -34,7 +34,7 @@ To maintain consistent filtering on the front end, your data must align with the
 
 If you need to introduce a new technology tag or a graduation year that is not currently listed, you are absolutely encouraged to do so. However, you must also modify `webring/src/types.ts` to add your new tag to the `techFiltersArray` or the relevant type unions as part of your pull request.
 
-### 5. The Optional Email Property
+### 5. Getting/Providing Feedback
 
 You may optionally add an `email` property to your member object.
 
