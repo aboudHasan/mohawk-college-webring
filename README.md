@@ -27,7 +27,7 @@ Your member object must include the following valid properties. Be sure that the
 
 To maintain consistent filtering on the front end, your data must align with the definitions in the codebase.
 
-- **Job & Year:** Your `jobStatus` and `graduationYear` properties must perfectly match the exact strings/numbers allowed in `webring/src/types.ts`.
+- **Job & Year:** Your `jobStatus` and `graduationYear` properties must match the exact strings/numbers allowed in `webring/src/types.ts`.
 - **Tech Tags:** All technologies listed in your `tags` property must exist exactly as written in the `techFiltersArray` located inside `webring/src/types.ts`.
 
 ### 4. Adding New Filter Tags (If Applicable)
