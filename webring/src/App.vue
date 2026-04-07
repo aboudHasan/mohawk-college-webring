@@ -77,7 +77,10 @@ function setYearFilters(value: YearFilters) {
 <template>
   <main>
     <header>
-      <h1><span>Mohawk College</span> Webring</h1>
+      <div class="title-container">
+        <img src="../public/logo.svg" class="header-logo" />
+        <h1><span>Mohawk College</span> Webring</h1>
+      </div>
       <p class="header-sub">A directory of student portfolio sites</p>
     </header>
 
@@ -144,15 +147,29 @@ header {
   border-bottom: 2px solid #333333;
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo {
+  height: 3.25rem;
+  width: auto;
+  flex-shrink: 0;
 }
 
 header h1 {
-  font-size: 2.25rem;
+  font-size: 3.25rem;
   font-weight: 800;
   color: #e8e8e8;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  margin-bottom: 0.5rem;
 }
 
 header h1 span {
@@ -203,5 +220,10 @@ a:focus {
 a:focus-visible {
   outline: 2px solid #ff9933;
   outline-offset: 2px;
+}
+
+img {
+  width: 50px;
+  height: 50px;
 }
 </style>
