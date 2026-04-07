@@ -1,5 +1,7 @@
 ### [Visit the webring](https://mohawk-college-webring.vercel.app/)
 
+# Please read this before contributing!
+
 ## What is a Webring?
 
 A webring is a collection of websites linked together in a circular structure. By joining this webring, you integrate your site into a continuous loop with fellow Mohawk College peers. This allows users to organically discover and filter student portfolio sites, fostering a stronger developer community.
@@ -56,11 +58,7 @@ Here is an example of what your HTML `href` tags should look like (make sure to 
   Previous
 </a>
 
-<a
-  href="https://mohawk-college-webring.vercel.app"
->
-  Mohawk Webring
-</a>
+<a href="https://mohawk-college-webring.vercel.app"> Mohawk Webring </a>
 
 <a
   href="https://mohawk-college-webring.vercel.app/api/next?from=https://aboudhasan.tech"
@@ -69,6 +67,7 @@ Here is an example of what your HTML `href` tags should look like (make sure to 
 </a>
 ```
 
-**Future Plans:** 
+**Future Plans:**
+
 - Currently, the widget relies on simple text labels like 'Next', 'Previous', and 'Mohawk Webring'. In the future, we hope to have an official webring logo for the main link and have SVG arrows for the navigation links. This will allow you to embed a much more visually appealing widget on your portfolio.
 - We'd also like to have a prettier domain than what we currently have.
