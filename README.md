@@ -1,6 +1,6 @@
 ### [Visit the webring](https://mohawk-college-webring.vercel.app/)
 
-# Please read this before contributing!
+# Please read this before opening a pull request to join!
 
 ## What is a Webring?
 
