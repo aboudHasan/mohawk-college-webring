@@ -77,7 +77,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
   height: 60px;
 
   /* You can do whatever color you like for the logo*/
-  background-color: #3b82f6;
+  background-color: white;
 
   -webkit-mask-image: url("https://mohawk-college-webring.vercel.app/logo.svg");
   mask-image: url("https://mohawk-college-webring.vercel.app/logo.svg");
