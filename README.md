@@ -90,3 +90,5 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
   mask-position: center;
 }
 ```
+
+Credits to Habib Abdul for the logo
