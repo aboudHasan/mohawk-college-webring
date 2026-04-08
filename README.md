@@ -91,4 +91,4 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 }
 ```
 
-## Credits to Habib Abdul for the logo
+#### Credits to Habib Abdul for the logo
