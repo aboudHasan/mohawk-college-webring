@@ -55,7 +55,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 
 ```html
 <a
-  href="https://mohawk-college-webring.vercel.app/api/previous?from=https://aboudhasan.tech"
+  href="https://mohawk-college-webring.vercel.app/api/previous?from=YOUR WEBSITE URL HERE"
 >
   Previous
 </a>
@@ -63,7 +63,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 <div class="webring-logo"></div>
 
 <a
-  href="https://mohawk-college-webring.vercel.app/api/next?from=https://aboudhasan.tech"
+  href="https://mohawk-college-webring.vercel.app/api/next?from=YOUR WEBSITE URL HERE"
 >
   Next
 </a>
@@ -76,7 +76,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
   width: 60px;
   height: 60px;
 
-  /* You can do whatever color you like for the logo*/
+  /* You can do whatever color you like for the logo. CSS magic!*/
   background-color: white;
 
   -webkit-mask-image: url("https://mohawk-college-webring.vercel.app/logo.svg");
