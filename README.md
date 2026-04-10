@@ -57,15 +57,17 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 <a
   href="https://mohawk-college-webring.vercel.app/api/previous?from=YOUR WEBSITE URL HERE"
 >
-  Previous
+  <div class="left-arrow"></div>
 </a>
 
-<div class="webring-logo"></div>
+<a href="https://mohawk-college-webring.vercel.app"
+  ><div class="webring-logo"></div
+></a>
 
 <a
   href="https://mohawk-college-webring.vercel.app/api/next?from=YOUR WEBSITE URL HERE"
 >
-  Next
+  <div class="right-arrow"></div>
 </a>
 ```
 
@@ -81,6 +83,40 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 
   -webkit-mask-image: url("https://mohawk-college-webring.vercel.app/logo.svg");
   mask-image: url("https://mohawk-college-webring.vercel.app/logo.svg");
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.left-arrow {
+  width: 60px;
+  height: 60px;
+
+  /* You can do whatever color you like for the arrows. CSS magic!*/
+  background-color: white;
+
+  -webkit-mask-image: url("https://mohawk-college-webring.vercel.app/leftArrow.svg");
+  mask-image: url("https://mohawk-college-webring.vercel.app/leftArrow.svg");
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.right-arrow {
+  width: 60px;
+  height: 60px;
+
+  /* You can do whatever color you like for the arrows. CSS magic!*/
+  background-color: white;
+
+  -webkit-mask-image: url("https://mohawk-college-webring.vercel.app/rightArrow.svg");
+  mask-image: url("https://mohawk-college-webring.vercel.app/rightArrow.svg");
 
   -webkit-mask-size: contain;
   mask-size: contain;
