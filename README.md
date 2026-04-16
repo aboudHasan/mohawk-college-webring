@@ -55,7 +55,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 
 ```html
 <a
-  href="https://mohawk-college-webring.vercel.app/api/previous?from=YOUR WEBSITE URL HERE"
+  href="https://mohawk-college-webring.vercel.app/api/previous?from=https://YOUR WEBSITE URL HERE"
 >
   <div class="left-arrow"></div>
 </a>
@@ -65,7 +65,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
 ></a>
 
 <a
-  href="https://mohawk-college-webring.vercel.app/api/next?from=YOUR WEBSITE URL HERE"
+  href="https://mohawk-college-webring.vercel.app/api/next?from=https://YOUR WEBSITE URL HERE"
 >
   <div class="right-arrow"></div>
 </a>
