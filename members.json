@@ -32,5 +32,23 @@
     ],
     "jobStatus": "Employed",
     "email": "otherunner05@gmail.com"
+  },
+  {
+    "name": "Alex Lefebvre",
+    "url": "https://gitalch.github.io/",
+    "graduationYear": 2027,
+    "tags": [
+      "JavaScript",
+      "PHP",
+      "Java",
+      "C#",
+      "Linux",
+      "Bash",
+      "Python",
+      "React",
+      "Node.js"
+    ],
+    "jobStatus": "Seeking co-op",
+    "email": "alexander.lefebvre@mohawkcollege.ca"
   }
 ]
