@@ -81,7 +81,12 @@ function setYearFilters(value: YearFilters) {
         <img src="../public/logo.svg" class="header-logo" />
         <h1><span>Mohawk College</span> Webring</h1>
       </div>
-      <p class="header-sub">A directory of student portfolio sites</p>
+      <p class="header-sub">
+        A directory of student portfolio sites |
+        <a href="https://github.com/aboudHasan/mohawk-college-webring"
+          >GitHub</a
+        >
+      </p>
     </header>
 
     <section class="controls-container">
