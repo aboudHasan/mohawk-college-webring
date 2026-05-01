@@ -54,9 +54,8 @@
   {
     "name": "Yasser Hasan",
     "url": "https://yourwebsite.com",
-    "jobStatus": "Student",
-    "graduationYear": 2026,
+    "jobStatus": "Seeking full-time",
+    "graduationYear": 2025,
     "tags": ["HTML", "CSS", "JavaScript"],
-    "email": "your@email.com"
   }
 ]
