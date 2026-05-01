@@ -50,5 +50,17 @@
     ],
     "jobStatus": "Seeking co-op",
     "email": "alexander.lefebvre@mohawkcollege.ca"
+  },
+  {
+    "name": "Your Name",
+    "url": "https://yourwebsite.com",
+    "graduationYear": 2026,
+    "tags": [
+      "JavaScript",
+      "React",
+      "Node.js"
+    ],
+    "jobStatus": "Student",
+    "email": "your@email.com"
   }
 ]
