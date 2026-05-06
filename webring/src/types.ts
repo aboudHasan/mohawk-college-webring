@@ -35,7 +35,9 @@ export const techFiltersArray = [
   "Laravel",
   "Bash",
   "Python",
-  "Docker"
+  "Docker",
+  "HTML",
+  "CSS"
 ] as const;
 
 export interface Member {
