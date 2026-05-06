@@ -50,5 +50,12 @@
     ],
     "jobStatus": "Seeking co-op",
     "email": "alexander.lefebvre@mohawkcollege.ca"
+  },
+  {
+    "name": "Yasser Hasan",
+    "url": "https://yasser-hasan1.github.io/yasserhasan.github.io/",
+    "jobStatus": "Seeking full-time",
+    "graduationYear": 2025,
+    "tags": ["HTML", "CSS", "JavaScript"]
   }
 ]
