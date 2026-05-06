@@ -1,4 +1,4 @@
-### [Visit the webring](https://mohawk-college-webring.vercel.app/)
+### [Visit the webring](https://mohawk-webring.xyz/)
 
 # Please read this before opening a pull request to join!
 
