@@ -19,7 +19,7 @@ All members are tracked within the `members.json` file.
 
 ### 2. Include Required Fields
 
-Your member object must include the following valid properties. Be sure that the values for your properties match the type definitions found in `webring/src/types.ts`
+Your member object must include the following valid properties. Be sure that the values for your properties match the type definitions found in `types.ts`
 
 - `name`: Your full name or preferred name.
 - `url`: The direct link to your personal website or portfolio.
@@ -31,12 +31,12 @@ Your member object must include the following valid properties. Be sure that the
 
 To maintain consistent filtering on the front end, your data must align with the definitions in the codebase.
 
-- **Job & Year:** Your `jobStatus` and `graduationYear` properties must match the exact strings/numbers allowed in `webring/src/types.ts`.
-- **Tech Tags:** All technologies listed in your `tags` property must exist exactly as written in the `techFiltersArray` located inside `webring/src/types.ts`.
+- **Job & Year:** Your `jobStatus` and `graduationYear` properties must match the exact strings/numbers allowed in `types.ts`.
+- **Tech Tags:** All technologies listed in your `tags` property must exist exactly as written in the `techFiltersArray` located inside `types.ts`.
 
 ### 4. Adding New Filter Tags (If Applicable)
 
-If you need to introduce a new technology tag or a graduation year that is not currently listed, you are absolutely encouraged to do so. However, you must also modify `webring/src/types.ts` to add your new tag to the `techFiltersArray` or the relevant type unions as part of your pull request.
+If you need to introduce a new technology tag or a graduation year that is not currently listed, you are absolutely encouraged to do so. However, you must also modify `types.ts` to add your new tag to the `techFiltersArray` or the relevant type unions as part of your pull request.
 
 ### 5. Getting/Providing Feedback
 
@@ -60,9 +60,7 @@ Below is what you need to get started. Copy and paste both the HTML and CSS into
   <div class="left-arrow"></div>
 </a>
 
-<a href="https://mohawk-webring.xyz"
-  ><div class="webring-logo"></div
-></a>
+<a href="https://mohawk-webring.xyz"><div class="webring-logo"></div></a>
 
 <a
   href="https://mohawk-webring.xyz/api/next?from=https://YOUR WEBSITE URL HERE"

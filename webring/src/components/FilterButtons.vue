@@ -6,7 +6,7 @@ import {
   jobFiltersArray,
   yearFiltersArray,
   techFiltersArray,
-} from "../types";
+} from "../../../types";
 
 const props = defineProps<{
   currentJobFilters: JobFilters[];

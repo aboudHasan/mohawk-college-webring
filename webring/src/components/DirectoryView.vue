@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Member } from "../types";
+import type { Member } from "../../../types";
 
 const props = defineProps<{
   filteredMembers: Member[];

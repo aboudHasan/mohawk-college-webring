@@ -62,7 +62,7 @@ if (
     `Invalid graduationYear property: "${newMember.graduationYear}".`,
   );
   console.error(
-    `Accepted values are: ${yearFiltersArray.join(", ")}\n\nIf this doesn't seem right, please update yearFiltersArray in webring/src/types.ts`,
+    `Accepted values are: ${yearFiltersArray.join(", ")}\n\nIf this doesn't seem right, please update yearFiltersArray in types.ts`,
   );
   hasError = true;
 }
@@ -79,7 +79,7 @@ if (!Array.isArray(newMember.tags)) {
     ) {
       console.error(`Unrecognized technology: "${tag}".`);
       console.error(
-        `\nIf you meant to add a new technology, you must also add it to the 'techFiltersArray' in 'webring/src/types.ts'.`,
+        `\nIf you meant to add a new technology, you must also add it to the 'techFiltersArray' in 'types.ts'.`,
       );
       hasError = true;
     }

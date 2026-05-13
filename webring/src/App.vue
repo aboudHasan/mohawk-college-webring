@@ -4,7 +4,7 @@ import {
   type TechFilters,
   type YearFilters,
   type Member,
-} from "./types";
+} from "../../types";
 import FilterButtons from "./components/FilterButtons.vue";
 import { computed, ref } from "vue";
 import DirectoryView from "./components/DirectoryView.vue";

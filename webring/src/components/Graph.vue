@@ -7,7 +7,7 @@ import {
   type ForceNodeDatum,
 } from "v-network-graph/lib/force-layout";
 import "v-network-graph/lib/style.css";
-import type { Member, Menu } from "../types";
+import type { Member, Menu } from "../../../types";
 import type { EventHandlers, Layouts } from "v-network-graph";
 
 const nodes = reactive<Record<string, Member>>({});
